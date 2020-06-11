@@ -15,7 +15,7 @@ type MenuState = {
 
 const initialState : MenuState = {
     isMenuOpen : true,
-    etc : 1
+    etc : 2
 }
 
 export default handleActions(
