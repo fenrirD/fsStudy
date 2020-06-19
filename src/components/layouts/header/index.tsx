@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import Header from "./header";
 import {bindActionCreators} from "redux";
 import * as menuActions from "../../../store/modules/menu";
+import Left from "../left/left";
 
 export class HeaderContainer extends Component<any, any> {
 
@@ -11,7 +12,10 @@ export class HeaderContainer extends Component<any, any> {
 
         console.log(this.props)
         return (
-            <Header isOpen={isOpen} handleMenuClick = {menuActions.handleMenuClick} />
+            <div style={{display:'flex'}}>
+                <Header isOpen={isOpen} handleMenuClick = {menuActions.handleMenuClick} />
+                <Left isOpen={isOpen} leftRoutes={this.props.leftRoutes}></Left>
+            </div>
             // <Header/>
 
         )

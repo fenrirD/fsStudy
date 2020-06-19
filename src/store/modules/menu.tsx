@@ -14,7 +14,7 @@ type MenuState = {
 }
 
 const initialState : MenuState = {
-    isMenuOpen : true,
+    isMenuOpen : false,
     etc : 2
 }
 
