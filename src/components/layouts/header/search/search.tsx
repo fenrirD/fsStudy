@@ -55,9 +55,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-// function 
+// function
 
-export default function PrimarySearchAppBar() {
+export default function PrimarySearchAppBar(props:any) {
   const classes = useStyles();
   const [comp, setComp] = useState(Home);
   return (
@@ -72,7 +72,7 @@ export default function PrimarySearchAppBar() {
                 input: classes.inputInput,
               }}
               inputProps={{ 'aria-label': 'search' }}
-              onClick={() => setComp(Home)}
+              onClick={() => props.handlePostClick()}
             />
              {/* <main children={comp} /> */}
           </div>

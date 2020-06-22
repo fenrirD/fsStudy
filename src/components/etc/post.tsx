@@ -22,6 +22,8 @@ const Postcode = () => {
     return (
         <DaumPostcode
             onComplete={handleComplete}
+            width={'100%'}
+
         />
     );
 }

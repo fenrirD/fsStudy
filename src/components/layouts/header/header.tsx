@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 )
 
-const Header = (props:{isOpen :boolean, handleMenuClick: any }) => {
+const Header = (props:{isOpen :boolean, handleMenuClick: any, handlePostClick: Function }) => {
     const classes = useStyles();
     const   renderPostCode = ()=>{
         const handleComplete = (data:any) => {
@@ -80,7 +80,7 @@ const Header = (props:{isOpen :boolean, handleMenuClick: any }) => {
                     <Typography variant="h6" className={classes.title}>
                         News
                     </Typography>
-                    <PrimarySearchAppBar />
+                    <PrimarySearchAppBar handlePostClick={props.handlePostClick}/>
                     <Button color="inherit">Login</Button>
                 </Toolbar>
             </AppBar>
