@@ -9,12 +9,10 @@ export class HeaderContainer extends Component<any, any> {
 
     render(): React.ReactNode {
         const {isOpen, menuActions} : any = this.props
-
-        console.log(this.props)
         return (
-            <div style={{display:'flex'}}>
+            <div>
                 <Header isOpen={isOpen} handleMenuClick = {menuActions.handleMenuClick} />
-                <Left isOpen={isOpen} leftRoutes={this.props.leftRoutes}></Left>
+                <Left isOpen={isOpen} leftRoutes={this.props.leftRoutes} handleMenuClick={menuActions.handleMenuClick}></Left>
             </div>
             // <Header/>
 

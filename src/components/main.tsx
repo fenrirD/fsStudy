@@ -8,18 +8,16 @@ import leftRoutes from '../constant/routes/left'
 import {Redirect, Route, Switch} from "react-router";
 
 const styles = (theme : Theme) => createStyles({
-        root: {
-            display: 'flex',
-        },
+
         content: {
             flexGrow: 1,
-            //padding: theme.spacing(3),
-            paddingTop: 64,
+            // padding: theme.spacing(3),
+            paddingTop: 28,
             transition: theme.transitions.create('margin', {
                 easing: theme.transitions.easing.sharp,
                 duration: theme.transitions.duration.leavingScreen,
             }),
-            marginLeft: -240,
+            // marginLeft: -240,
         },
         contentShift: {
             transition: theme.transitions.create('margin', {
@@ -31,22 +29,18 @@ const styles = (theme : Theme) => createStyles({
 
 })
 
-
 class Main extends Component<any, any> {
 
     constructor(props? : any) {
         super(props);
-        console.log(this.props)
-        console.log(props)
 
     }
 
     componentDidMount(): void {
 
-
     }
 
-    renderLeftRoutes = () => {
+    renderLeftRoutes = (isOpen:Boolean) => {
         return (
             <Switch>
                 {
@@ -54,23 +48,21 @@ class Main extends Component<any, any> {
                         <Route path={route.path} key={route.name} component={route.component} />
                     ))
                 }
-                <Redirect to='/index'/>
+                <Redirect to='/index2'/>
             </Switch>
         )
     }
 
     render(): React.ReactNode {
         const classes = this.props.classes
-        console.log(classes)
         return (
-            <div className={classes.root}>
+            <div style={{height:'100%'}}>
                 {/*TODO Header Component 이벤트 혹은 필요한 상태 전달.*/}
                 <HeaderContainer leftRoutes={leftRoutes}/>
-                <main className={clsx(classes.content, {
-                    [classes.contentShift] : this.props.isOpen
-                })}>
+                <main className={classes.content}>
                     {
-                        this.renderLeftRoutes()
+                        this.renderLeftRoutes(this.props.isOpen)
+                        // <MainMap></MainMap>
                     }
                 </main>
             </div>

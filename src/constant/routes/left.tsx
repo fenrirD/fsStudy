@@ -1,6 +1,7 @@
 import React from "react";
 import MainMap from "../../components/map/map";
-
+import InputAdornments from "../../components/etc/etc";
+import Postcode from "../../components/etc/post";
 const leftRoutes = [
     {
         path : '/index',
@@ -10,12 +11,12 @@ const leftRoutes = [
     {
         path : '/index2',
         name : 'Map1',
-        component : () => <MainMap />
+        component : () => <InputAdornments />
     },
     {
         path : '/index3',
         name : 'Map2',
-        component : () => <MainMap />
+        component : () => <Postcode />
     },
     {
         path : '/index4',
