@@ -4,6 +4,7 @@ import MenuIcon from '@material-ui/icons/Menu'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import DaumPostcode from 'react-daum-postcode';
+import PrimarySearchAppBar from './search/search';
 const drawerWidth = 240
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -79,6 +80,7 @@ const Header = (props:{isOpen :boolean, handleMenuClick: any }) => {
                     <Typography variant="h6" className={classes.title}>
                         News
                     </Typography>
+                    <PrimarySearchAppBar />
                     <Button color="inherit">Login</Button>
                 </Toolbar>
             </AppBar>
