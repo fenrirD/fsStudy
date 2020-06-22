@@ -7,7 +7,7 @@ import OSM from 'ol/source/OSM';
 import {ZoomToExtent, MousePosition} from 'ol/control'
 import XYZ from 'ol/source/XYZ';
 import TileGrid from 'ol/tilegrid/TileGrid';
-import {get as getProjection} from 'ol/proj';
+import {get as getProjection, addProjection} from 'ol/proj';
 import {register} from 'ol/proj/proj4'
 import {createStringXY} from 'ol/coordinate'
 import proj4 from 'proj4';
@@ -21,6 +21,7 @@ import {Vector as VectorSource, TileWMS} from 'ol/source';
 import Feature from 'ol/Feature';
 import Geometry from 'ol/geom/Geometry';
 import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style';
+import Projection from "ol/proj/Projection";
 
 
 
@@ -89,19 +90,29 @@ class MainMap extends Component<any, any>{
             })
         };
 
-        proj4.defs("EPSG:5181","+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=500000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
-        proj4.defs("EPSG:5174","+proj=tmerc +lat_0=38 +lon_0=127.0028902777778 +k=1 +x_0=200000 +y_0=500000 +ellps=bessel +units=m +no_defs +towgs84=-115.80,474.99,674.11,1.16,-2.31,-1.63,6.43");
+        // proj4.defs("EPSG:5181","+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=500000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
+        proj4.defs("EPSG:5181",`+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=500000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs`);
+        proj4.defs("EPSG:5174",`+proj=tmerc +lat_0=38 +lon_0=127.0028902777778 +k=1 +x_0=200000 +y_0=500000 +ellps=bessel +units=m +no_defs +towgs84=-115.80,474.99,674.11,1.16,-2.31,-1.63,6.43`);
         register(proj4)
-        const proj5181 = getProjection('EPSG:5181')
-        const proj5174 = getProjection('EPSG:5174')
-        console.log(proj5181)
-        // const extent      = [-50000, -100000, 494288, 988576];
-        const extent      = [-30000, -60000, 494288, 988576];
+        // const extent      = [-30000, -60000, 494288, 988576];
+        const extent: any      = [-30000, -60000, 475288, 930576]
+        // const proj5181 = getProjection('EPSG:5181')
+        const proj5181 = new Projection({
+            code: 'EPSG:5181',
+            extent: extent,
 
-        // @ts-ignore
+        });
         proj5181.setExtent(extent)
-        const resolutions = [2048, 1024, 512, 256, 128, 64, 32, 16, 8, 4, 2, 1, 0.5, 0.25];
-        console.log(this.map)
+        const proj5174 = getProjection('EPSG:5174')
+        proj5174.setExtent(extent)
+        console.log(proj5181,proj5174)
+        // const extent      = [-50000, -100000, 494288, 988576];
+
+
+        const resolutions = [512, 256, 128, 64, 32, 16, 8, 4, 2, 1, 0.5, 0.25];
+        // const resolutions = [256, 128, 64, 32, 16, 8, 4, 2, 1, 0.5, 0.25];
+        // const resolutions = [256, 128, 64, 32, 16, 8, 4, 2, 1, 0.5, 0.25];
+        console.log(resolutions)
         const map1 =new Map({
             layers: [
                 new TileLayer({
@@ -110,56 +121,61 @@ class MainMap extends Component<any, any>{
                     // type : 'base',
                     source: new XYZ({
                         // projection: proj5181,
-                        projection: proj5174,
+                        projection: proj5181,
                         tileSize: 256,
                         // minZoom: 0,
-                        //maxZoom: resolutions.length - 1,
-                        tileUrlFunction: (tileCoord, pixelRatio, projection) => {
+                        // maxZoom: resolutions.length - 1,
+                        tileGrid: new TileGrid({
+                            origin: [extent[0],extent[1]],
+                            resolutions: resolutions,
+                            // tileSize: 256
+                        }),
+                        tileUrlFunction: function(tileCoord, pixelRatio, projection)  {
                             if (tileCoord == null) return '';
+                            // console.log(projection)
                             let s: Number = Math.floor(Math.random() * 4);  // 0 ~ 3
                             let z: Number = resolutions.length - tileCoord[0];
                             let x: Number = tileCoord[1];
-                            let y: Number = tileCoord[2] * -1;
-                            return `http://map${s}.daumcdn.net/map_2d/1810uis/L${z}/${y}/${x}.png`;
+                            let y: Number = tileCoord[2];
+                            return `http://map${s}.daumcdn.net/map_2d/1902usc/L${z}/${y}/${x}.png`;
                         },
-                        tileGrid: new TileGrid({
-                            origin: [-30000, -60000],
-                            resolutions: resolutions,
-                            //tileSize: [256]
-                        }),
+
                     })
                 }),
-                new TileLayer({
-                    source: new TileWMS({
-                        url: 'http://192.168.0.105:8080/geoserver/seoul/wms',
-                        params: {
-                            'FORMAT': 'image/png',
-                            'VERSION': '1.1.1',
-                            tiled: true,
-                            "LAYERS": 'seoul:admin_sid',
-                            "exceptions": 'application/vnd.ogc.se_inimage',
-                            tilesOrigin: 179101.84250000026 + "," + 436263.77749999985
-                        }
-                    })
-                }),
+                // new TileLayer({
+                //     source: new TileWMS({
+                //         url: 'http://192.168.0.105:8080/geoserver/seoul/wms',
+                //         params: {
+                //             'FORMAT': 'image/png',
+                //             'VERSION': '1.1.1',
+                //             tiled: true,
+                //             "LAYERS": 'seoul:admin_sid',
+                //             "exceptions": 'application/vnd.ogc.se_inimage',
+                //             tilesOrigin: 179101.84250000026 + "," + 436263.77749999985
+                //         },
+                //         projection: 'EPSG:5181'
+                //     })
+                // }),
             ],
             target: 'map',
             view: new View({
-                projection: proj5174,
-                extent: [-30000, -60000, 494288, 988576],
+                projection: proj5181,
+                extent: extent,
                 resolutions: resolutions,
-                maxResolution: resolutions[0],
-                zoomFactor: 1,
+                // maxResolution: resolutions[0],
+                // zoomFactor: 1,
                 center: [(extent[0] + extent[2]) / 2, (extent[1] + extent[3]) / 2],
-                zoom: 0
+                // center: [0,0],
+                zoom: 2
             })
         });
         // axios.get('http://192.168.0.105:8080/geoserver/seoul/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=seoul%3Aadmin_sgg&maxFeatures=50&outputFormat=application%2Fjson')
-        axios.get('http://192.168.0.105:8080/geoserver/seoul/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=seoul%3Aadmin_sid&maxFeatures=50&outputFormat=application%2Fjson')
+        axios.get('http://192.168.0.105:8080/geoserver/seoul/ows?service=WFS&version=1.0.0&request=GetFeature&srsName=EPSG:5174&typeName=seoul%3Aadmin_sid&maxFeatures=50&outputFormat=application%2Fjson')
             .then((response) => {
                 console.log(response)
                 let vectorSource : any= new VectorSource({
-                    features: (new GeoJSON()).readFeatures(response.data)
+                    features: (new GeoJSON()).readFeatures(response.data),
+                    format: new GeoJSON()
                 })
                 console.log(vectorSource)
                 let vectorLayer =new VectorLayer({
@@ -171,7 +187,7 @@ class MainMap extends Component<any, any>{
                     }
                 });
                 map1.addLayer(vectorLayer)
-
+                console.log(map1.getLayers())
             })
 
     }
