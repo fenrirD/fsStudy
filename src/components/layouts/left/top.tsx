@@ -76,6 +76,8 @@ const Top = (props:{isOpen :boolean, leftRoutes:Array<leftMenu>, handleMenuClick
                     onClose={toggleDrawer('top', false)}
                     onOpen={toggleDrawer('top', true)}
                     elevation={14}
+                    disableBackdropTransition={true}
+                    variant={'persistent'}
                     classes={{
                         paper : classes.a
                     }}
