@@ -9,20 +9,26 @@ import XYZ from 'ol/source/XYZ';
 import TileGrid from 'ol/tilegrid/TileGrid';
 import {get as getProjection, addProjection} from 'ol/proj';
 import {register} from 'ol/proj/proj4'
+import {transform} from 'ol/proj'
 import {createStringXY} from 'ol/coordinate'
 import proj4 from 'proj4';
+
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import * as menuActions from "../../store/modules/menu";
 import axios from 'axios'
 import GeoJSON from 'ol/format/GeoJSON';
 import {Vector as VectorLayer} from 'ol/layer';
-import {Vector as VectorSource, TileWMS} from 'ol/source';
+import {Vector as VectorSource, TileWMS, Cluster} from 'ol/source';
 import Feature from 'ol/Feature';
+import {Point} from 'ol/geom';
 import Geometry from 'ol/geom/Geometry';
-import {Circle as CircleStyle, Fill, Stroke, Style} from 'ol/style';
+import {Circle as CircleStyle, Fill, Stroke, Style, Text} from 'ol/style';
 import Projection from "ol/proj/Projection";
-
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+import EditIcon from '@material-ui/icons/Edit';
+import Measure from "./measure/mesure";
 
 
 class MainMap extends Component<any, any>{
@@ -34,9 +40,14 @@ class MainMap extends Component<any, any>{
     constructor(props? : any) {
         super(props);
         this.map = React.createRef()
-        if(this.props.isOpen) this.props.menuActions.handleMenuClick()
+        this.state = {
+            map: null
+        }
+
     }
     componentDidMount() {
+        console.log(this)
+        const {userLocation} = this.props
         const styles:any = {
             'LineString': new Style({
                 stroke: new Stroke({
@@ -113,15 +124,27 @@ class MainMap extends Component<any, any>{
         // const resolutions = [256, 128, 64, 32, 16, 8, 4, 2, 1, 0.5, 0.25];
         // const resolutions = [256, 128, 64, 32, 16, 8, 4, 2, 1, 0.5, 0.25];
         console.log(resolutions)
-        const map1 =new Map({
+
+        console.log(userLocation)
+        // if(userLocation) {
+        //     alert(transform(userLocation, 'EPSG:3857', 'EPSG:5174'))
+        //     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        //     // this.state.map.getView().setCenter(transform(userLocation, 'EPSG:4326', 'EPSG:5181'))
+        //     // this.state.map.getView().setZoom(13)
+        // }
+
+        const map1 = new Map({
             layers: [
+                // new TileLayer({
+                //   source: new OSM()
+                // })
                 new TileLayer({
                     // title : "Daum Street Map",
                     visible: true,
                     // type : 'base',
                     source: new XYZ({
-                        // projection: proj5181,
                         projection: proj5181,
+                        // projection: proj5174,
                         tileSize: 256,
                         // minZoom: 0,
                         // maxZoom: resolutions.length - 1,
@@ -159,17 +182,19 @@ class MainMap extends Component<any, any>{
             ],
             target: 'map',
             view: new View({
-                projection: proj5181,
+                projection: proj5174,
+                // projection: proj5181,
                 extent: extent,
                 resolutions: resolutions,
-                // maxResolution: resolutions[0],
+                // // maxResolution: resolutions[0],
                 // zoomFactor: 1,
                 center: [(extent[0] + extent[2]) / 2, (extent[1] + extent[3]) / 2],
-                // center: [0,0],
-                zoom: 2
+                // center: [127,37],
+                zoom: 10
             })
         });
-        // axios.get('http://192.168.0.105:8080/geoserver/seoul/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=seoul%3Aadmin_sgg&maxFeatures=50&outputFormat=application%2Fjson')
+        let styleCache:any = {}
+
         axios.get('http://192.168.0.105:8080/geoserver/seoul/ows?service=WFS&version=1.0.0&request=GetFeature&srsName=EPSG:5174&typeName=seoul%3Aadmin_sid&maxFeatures=50&outputFormat=application%2Fjson')
             .then((response) => {
                 console.log(response)
@@ -188,14 +213,69 @@ class MainMap extends Component<any, any>{
                 });
                 map1.addLayer(vectorLayer)
                 console.log(map1.getLayers())
+
             })
-
+        this.setState({
+            map: map1
+        })
+        if(userLocation) {
+            let userLocaionPoint = new VectorLayer({
+                source: new VectorSource({
+                    features: [new Feature({
+                        geometry: new Point(transform(userLocation, 'EPSG:4326', 'EPSG:5181'))
+                    })]
+                })
+            })
+            map1.addLayer(userLocaionPoint)
+            map1.getView().setCenter(transform(userLocation, 'EPSG:4326', 'EPSG:5174'))
+        }
     }
+    queryTest = () => {
+        let oldT = new Date().getTime()
+        axios.get('/queryTest')
+            .then((response) => {
+                console.log(response.data[0].geojson.value)
+                let newT1 = new Date().getTime()
+                let newVectorLayers = new VectorLayer({
+                    source : new VectorSource({
+                        features :(new GeoJSON()).readFeatures(response.data[0].geojson.value),
+                        // features : response.data.reduce((acc:any, cur:any, idx:any)=>{
+                        //     return [
+                        //         ...acc,
+                        //         new Feature(new Point([cur.x, cur.y]))
+                        //     ]
+                        // },[])
+                    }),
 
+                })
+                this.state.map.addLayer(newVectorLayers)
+                let newT = new Date().getTime()
+                alert('point add -> '+(newT-oldT)/1000 +' :: request end -> ' + (newT1-oldT)/1000)
+            })
+    }
+    zoom = () => {
+        const {userLocation} = this.props
+        console.log(userLocation)
+        if(userLocation) {
+            alert(transform(userLocation, 'EPSG:3857', 'EPSG:5174'))
+            // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+            this.state.map.getView().setCenter(transform(userLocation, 'EPSG:4326', 'EPSG:5181'))
+            this.state.map.getView().setZoom(13)
+        }
+    }
     render() {
         console.log(this)
+        // this.zoom()
+
         return(
+
                 <div style={{width:`100%`,}}>
+                    <button onClick={()=>this.queryTest()} style={{
+                        position: 'absolute',
+                        left: '100px',
+                        zIndex: 999
+                    }}> aa</button>
+                    <Measure map={this.state.map}/>
                     <div id='map' ref={this.map} style={{
                         width: '100%',
                         height: window.innerHeight-64,
@@ -209,7 +289,10 @@ class MainMap extends Component<any, any>{
 }
 
 export default connect(({menu} : any) => ({
-    isOpen : menu.isMenuOpen
+    isOpen : menu.isMenuOpen,
+    isPostOpen: menu.isPostOpen,
+    userLocation: menu.userLocation
+
 }), dispatch => ({
     menuActions : bindActionCreators(menuActions, dispatch)
 }))(MainMap)

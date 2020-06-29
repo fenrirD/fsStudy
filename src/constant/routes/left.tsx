@@ -6,7 +6,7 @@ const leftRoutes = [
     {
         path : '/index',
         name : 'Map',
-        component : () => <MainMap />
+        component : (location:any) => <MainMap location={location}/>
     },
     {
         path : '/index2',

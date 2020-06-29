@@ -81,7 +81,9 @@ const Top = (props:{isOpen :boolean, leftRoutes:Array<leftMenu>, handleMenuClick
                     classes={{
                         paper : classes.a
                     }}
-
+                    SlideProps={{
+                        timeout: 0
+                    }}
                 >
                     {list('top')}
                 </SwipeableDrawer>

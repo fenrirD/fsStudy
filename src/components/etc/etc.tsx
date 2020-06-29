@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import clsx from 'clsx';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
@@ -12,6 +12,8 @@ import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -35,11 +37,14 @@ interface State {
     amount: string;
     password: string;
     weight: string;
+    base: string;
     weightRange: string;
     showPassword: boolean;
+
 }
 
 export default function InputAdornments() {
+    // const [base, setBase] = useState({base:''})
     const classes = useStyles();
     const [values, setValues] = React.useState<State>({
         amount: '',
@@ -47,6 +52,7 @@ export default function InputAdornments() {
         weight: '',
         weightRange: '',
         showPassword: false,
+        base:''
     });
 
     const handleChange = (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,8 +67,35 @@ export default function InputAdornments() {
         event.preventDefault();
     };
 
+    const handleClickCamera = () => {
+        // @ts-ignore
+        window.webViewBridge.send('handleOnClickCamera', window.counter, (res)=> setValues({...values, base:res}), (error)=> alert(error))
+
+    }
+
+    const renderImg = () => {
+        return (
+            <div>
+                <img src={`data:image/png;base64,${values.base}`} width={250} height={250}/>
+            </div>
+        )
+    }
+
     return (
+
         <div className={classes.root}>
+            {console.log(values.base)}
+            {values.base ? renderImg() : null}
+            <Fab color="primary" aria-label="add" style={{
+                position : 'absolute',
+                zIndex: 999,
+                right: '15px',
+                marginTop : '160px'
+            }}
+                 onClick={ ()=> handleClickCamera()}
+            >
+                <AddIcon />
+            </Fab>
             <div>
                 <TextField
                     label="With normal TextField"

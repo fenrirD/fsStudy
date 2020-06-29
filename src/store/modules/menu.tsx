@@ -6,30 +6,38 @@ const HANDEL_MENU_CLICK = 'menu/HANDEL_MENU_CLICK'
 
 const HANDEL_POST_CLICK = 'menu/HANDEL_POST_CLICK'
 
+const SET_USER_LOCATION = 'menu/SET_USER_LOCATION'
+
 export const testActio = createAction(REUDX_TEST, (payload: any) => payload)
 
 export const handleMenuClick = createAction(HANDEL_MENU_CLICK, (payload: any) => payload)
 
 export const handlePostClick = createAction(HANDEL_POST_CLICK, (payload: any) => payload)
 
+export const setUserLocation = createAction(SET_USER_LOCATION, (payload: any) => payload)
+
 type MenuState = {
+    userLocation: number[]| null,
     isMenuOpen: Boolean,
     isPostOpen : Boolean
-    etc : Number
+    etc : string | null
 }
 
 const initialState : MenuState = {
+    userLocation: null,
     isMenuOpen : false,
     isPostOpen : false,
-    etc : 2
+    etc : null
 }
 
 export default handleActions(
     {
-        [REUDX_TEST] : (state, action) =>{
-            console.log('reducer ')
+        [SET_USER_LOCATION] : (state:any, action:any) => {
+            console.log('reducer ',state, action)
+            const data = action.payload
             return {
-                ...state
+                ...state,
+                userLocation: data
             }
         },
         [HANDEL_MENU_CLICK] : (state, action) =>{
