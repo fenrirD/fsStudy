@@ -14,6 +14,7 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
+import axios from 'axios'
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -69,7 +70,12 @@ export default function InputAdornments() {
 
     const handleClickCamera = () => {
         // @ts-ignore
-        window.webViewBridge.send('handleOnClickCamera', window.counter, (res)=> setValues({...values, base:res}), (error)=> alert(error))
+        window.webViewBridge.send('handleOnClickCamera', window.counter, (res)=>
+        {
+            setValues({...values, base: res})
+
+        }, (error:any)=> alert(error)
+        )
 
     }
 
@@ -81,11 +87,33 @@ export default function InputAdornments() {
         )
     }
 
+    const handleClick = () => {
+        let old = new Date().getTime()
+        axios.post('http://192.168.0.106/multiparts', {
+            data: [values.base, values.base, values.base, values.base, values.base, values.base, values.base, values.base, values.base, values.base]
+        }).then((res) => {
+            let newT = new Date().getTime()
+            alert((newT-old)/1000)
+        }).catch(error=> {
+            console.log(error)
+        })
+    }
+
     return (
 
         <div className={classes.root}>
             {console.log(values.base)}
             {values.base ? renderImg() : null}
+            <Fab color="primary" aria-label="add" style={{
+                position : 'absolute',
+                zIndex: 999,
+                right: '15px',
+                marginTop : '100px'
+            }}
+                 onClick={ ()=> handleClick()}
+            >
+                <AddIcon />
+            </Fab>
             <Fab color="primary" aria-label="add" style={{
                 position : 'absolute',
                 zIndex: 999,
