@@ -12,7 +12,7 @@ import {register} from 'ol/proj/proj4'
 import {transform} from 'ol/proj'
 import {createStringXY} from 'ol/coordinate'
 import proj4 from 'proj4';
-
+import {defaults} from 'ol/control';
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import * as menuActions from "../../store/modules/menu";
@@ -190,8 +190,11 @@ class MainMap extends Component<any, any>{
                 // zoomFactor: 1,
                 center: [(extent[0] + extent[2]) / 2, (extent[1] + extent[3]) / 2],
                 // center: [127,37],
-                zoom: 10
-            })
+                zoom: 10,
+                enableRotation: false
+            }),
+
+
         });
         let styleCache:any = {}
 
