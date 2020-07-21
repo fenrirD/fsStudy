@@ -3,6 +3,7 @@ import MainMap from "../../components/map/map";
 import InputAdornments from "../../components/etc/etc";
 import Postcode from "../../components/etc/post";
 import Dashboard from "../../components/dashboard";
+import DemoTabs from "../../components/etc/samplePage";
 
 const hierarchyRoutes = [
     {
@@ -24,6 +25,11 @@ const hierarchyRoutes = [
         to : '/index3',
         label : '현장 조사',
         component : () => <Postcode />
+    },
+    {
+        to: '/sample',
+        label: '샘플',
+        component : () => <DemoTabs />
     },
     {
         to : '/general',

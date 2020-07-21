@@ -6,6 +6,8 @@ import {BrowserRouter, HashRouter} from 'react-router-dom'
 import {Route} from 'react-router'
 import Main from "./components/main";
 import store from './store'
+import 'react-app-polyfill/ie11'
+import 'react-app-polyfill/stable'
 
 ReactDOM.render(
   <Provider store={store}>
@@ -16,4 +18,5 @@ ReactDOM.render(
   ,
   document.getElementById('root')
 );
+
 

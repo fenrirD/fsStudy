@@ -58,29 +58,31 @@ const Header = (props:any) => {
                     </Hidden>
                     {/*// TODO 웹 화면*/}
                     <Hidden mdDown>
-                        <Box className="d-flex align-items-center">
-                            <Button
-                                href="https://uifort.com/template/carolina-react-admin-dashboard-material-ui-free"
-                                target="_blank"
-                                size="small"
-                                variant="contained"
-                                color="default"
-                                className="mr-3">
-                                Download now
-                            </Button>
-                            <Button
-                                href="https://uifort.com/template/carolina-react-admin-dashboard-material-ui-pro"
-                                target="_blank"
-                                size="small"
-                                variant="contained"
-                                color="primary">
-                                View PRO Version
-                            </Button>
+                        <Box
+                            className="app-logo-wrapper"
+                            title="Carolina React Admin Dashboard with Material-UI Free">
+                            <Link to="/DashboardDefault" style={{
+                                marginRight: '1rem'
+                            }}>
+                                <IconButton
+                                    color="primary"
+                                    size="medium"
+                                    className="app-logo-btn">
+                                    <img
+                                        className="app-logo-img"
+                                        alt="Carolina React Admin Dashboard with Material-UI Free"
+                                        src={projectLogo}
+                                    />
+                                </IconButton>
+                            </Link>
+                            <Hidden smDown>
+                                <Box className="app-logo-text">매입임대 신청주택</Box>
+                            </Hidden>
                         </Box>
                     </Hidden>
                     <Box className="d-flex align-items-center">
                         {/*<HeaderUserbox />*/}
-                        <Box className="toggle-sidebar-btn-mobile">
+                        <Box >
                             <Tooltip title="Toggle Sidebar" placement="right">
                                 <IconButton
                                     color="inherit"

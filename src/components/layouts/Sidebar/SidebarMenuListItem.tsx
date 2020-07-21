@@ -1,10 +1,13 @@
 import React, { useState, forwardRef } from 'react';
 import { NavLink as RouterLink } from 'react-router-dom';
 import clsx from 'clsx';
+import { connect } from 'react-redux';
 
 import { ListItem, Button, Collapse } from '@material-ui/core';
 
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import {bindActionCreators} from "redux";
+import * as menuActions from "../../../store/modules/menu";
 
 const CustomRouterLink = forwardRef(function CustomLink(props:any, ref:any) {
   return (
@@ -20,12 +23,14 @@ const SidebarMenuListItem = (props:any) => {
     href,
     depth,
     children,
+    menuActions,
     icon: Icon,
     className,
     open: openProp,
     label: Label,
     ...rest
   } = props;
+
 
   const [open, setOpen] = useState(openProp);
 
@@ -77,6 +82,7 @@ const SidebarMenuListItem = (props:any) => {
           color="primary"
           disableRipple
           variant="text"
+          onClick={menuActions.handleMenuClick}
           className={clsx('app-sidebar-button-wrapper', `depth-${depth}`)}
           component={CustomRouterLink}
           exact
@@ -100,4 +106,6 @@ SidebarMenuListItem.defaultProps = {
   open: false
 };
 
-export default SidebarMenuListItem;
+export default connect(null, (dispatch) =>({
+  menuActions : bindActionCreators(menuActions, dispatch)
+}))(SidebarMenuListItem);

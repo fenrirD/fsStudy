@@ -288,7 +288,7 @@ class Main extends Component<any, any> {
     }
 
     componentDidMount(): void {
-
+        alert(window.navigator.userAgent)
         // @ts-ignore
         window.counter = 0;
         // user location get!

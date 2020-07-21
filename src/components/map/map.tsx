@@ -29,19 +29,27 @@ import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import Measure from "./measure/mesure";
+import { Card } from '@material-ui/core';
 
 
 class MainMap extends Component<any, any>{
 
     private map : React.RefObject<HTMLDivElement>;
 
+    reportWindowSize = () =>{
+        this.setState({
+            height: window.innerHeight-126
+        })
 
+    }
 
     constructor(props? : any) {
         super(props);
         this.map = React.createRef()
+        window.addEventListener('resize', this.reportWindowSize);
         this.state = {
-            map: null
+            map: null,
+            height : window.innerHeight-126
         }
 
     }
@@ -267,12 +275,10 @@ class MainMap extends Component<any, any>{
         }
     }
     render() {
-        console.log(this)
+        console.log(window.innerHeight)
         // this.zoom()
-
         return(
-
-                <div style={{width:`100%`,}}>
+                <Card style={{width:`100%`,}}>
                     <button onClick={()=>this.queryTest()} style={{
                         position: 'absolute',
                         left: '100px',
@@ -281,11 +287,11 @@ class MainMap extends Component<any, any>{
                     <Measure map={this.state.map}/>
                     <div id='map' ref={this.map} style={{
                         width: '100%',
-                        height: window.innerHeight-64,
+                        height: this.state.height,
                         /*height: '100%'*/
                     }}>
                     </div>
-                </div>
+                </Card>
         )
     }
 

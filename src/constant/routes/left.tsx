@@ -3,6 +3,7 @@ import MainMap from "../../components/map/map";
 import InputAdornments from "../../components/etc/etc";
 import Postcode from "../../components/etc/post";
 import Dashboard from "../../components/dashboard";
+import DemoTabs from "../../components/etc/samplePage";
 
 const leftRoutes = [
     {
@@ -49,6 +50,11 @@ const leftRoutes = [
         path: '/general/4',
         name: '현장조사 요약',
         component : () => <InputAdornments />
+    },
+    {
+        path: '/sample',
+        name: '샘플',
+        component : () => <DemoTabs />
     },
 
 

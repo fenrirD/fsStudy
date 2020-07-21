@@ -101,49 +101,7 @@ const Left = (props:{isOpen :boolean, leftRoutes:Array<leftMenu>, handleMenuClic
                 </SwipeableDrawer>
             </React.Fragment>
         </div>
-        // <Drawer
-        //     className={classes.drawer}
-        //     variant="persistent"
-        //     anchor="left"
-        //     open={props.isOpen}
-        //     classes={{
-        //         paper: classes.drawerPaper,
-        //     }}
-        // >
-        //     {/*<div className={classes.drawerHeader}>*/}
-        //     {/*    <IconButton onClick={handleDrawerClose}>*/}
-        //     {/*        {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}*/}
-        //     {/*    </IconButton>*/}
-        //     {/*</div>*/}
-        //     <Divider />
-        //     <List>
-        //         {
-        //             leftRoutes.map((route:leftMenu, idx)=> (
-        //                 <NavLink className='list-header expanded' activeClassName="active" key={`group-header${idx}`}
-        //                          to={route.path} style={{textDecoration:'none'}}
-        //                          /*onClick={() => props.handleMenuClick()}*/
-        //                 >
-        //                     <ListItem button key={route.name}>
-        //                         <ListItemIcon>{idx % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-        //                         <ListItemText primary={route.name}  />
-        //                     </ListItem>
-        //                 </NavLink>
-        //                 )
-        //             )
-        //         }
-        //
-        //     </List>
-        //
-        //     <Divider />
-        //     <List>
-        //         {['All mail', 'Trash', 'Spam'].map((text, index) => (
-        //             <ListItem button key={text}>
-        //                 <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-        //                 <ListItemText primary={text} />
-        //             </ListItem>
-        //         ))}
-        //     </List>
-        // </Drawer>
+
 )}
 
 export default Left
