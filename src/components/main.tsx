@@ -48,7 +48,7 @@ class Main extends Component<any, any> {
                         <Route path={route.path} key={route.name} component={route.component} />
                     ))
                 }
-                <Redirect to='/index2'/>
+                <Redirect to='/index'/>
             </Switch>
         )
     }
